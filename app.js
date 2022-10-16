@@ -1,12 +1,35 @@
 const express = require("express")
+const morgan = require("morgan")
+
 const app = express()
 
 // setting up view engine
 app.set("view engine", "ejs")
 
-
 app.listen(3000)
 
+// serving static files
+app.use(express.static("public"))
+
+// middleware
+app.use((req, res, next) => {
+    console.log("###$$$%%%%")
+    console.log("new request made: ")
+    console.log("host: ", req.hostname)
+    console.log("path: ", req.path)
+    console.log("method: ", req.method)
+    next()
+})
+
+app.use(morgan("dev"))
+
+// another middleware
+app.use((req, res, next) => {
+    console.log("SECOND MIDDLEWARE")
+    res.locals.path = req.path
+    console.log(res.locals.path)
+    next()
+})
 
 /** // for sending html files
 app.get("/", (req, res) => {
